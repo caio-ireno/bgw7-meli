@@ -61,10 +61,6 @@ func main() {
 		Category:    "Esporte",
 	}
 
-	myLoja := Loja{}
-
-	myLoja.Save(p1)
-
 	p2 := Produto{
 		Id:          2,
 		Name:        "Celular",
@@ -73,8 +69,12 @@ func main() {
 		Category:    "Eletronico",
 	}
 
+	myLoja := Loja{} // Instanciando a struct Loja
+
+	myLoja.Save(p1)
 	myLoja.Save(p2)
-	//Loja.GetAll()
+	myLoja.GetAll()
+
 	produtoId, myError := myLoja.GetById(2)
 	if myError != nil {
 		fmt.Println(myError)
