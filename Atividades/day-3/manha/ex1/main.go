@@ -20,7 +20,7 @@ func imposto(num float64) (float64, float64) {
 	if num >= 50000 {
 		return num * 0.83, num * 0.17
 	} else if num >= 150000 {
-		return num * 0.73, num * 0.277
+		return num * 0.73, num * 0.27
 	} else {
 		return num, 0
 	}

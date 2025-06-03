@@ -56,7 +56,7 @@ func operation(operation string) (func(value ...int) float64, error) {
 				return 0
 			}
 
-			min := 0
+			min := values[0]
 			for _, i := range values {
 				if i < min {
 					min = i
