@@ -20,7 +20,11 @@ type PassageirosService struct {
 }
 
 func (ps PassageirosService) GetTotalPassagens() (int, error) {
+	//tamanho := len(ps.List)
 
+	// if tamanho == 0 {
+	// 	return 0, errors.New("quantidade de passageiros é zero")
+	// }
 	return len(ps.List), nil
 }
 
