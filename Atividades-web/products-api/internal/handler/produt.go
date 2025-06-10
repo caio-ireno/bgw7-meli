@@ -6,7 +6,8 @@ import (
 	"strconv"
 
 	"github.com/caio-ireno/prodcts-api-go/internal/domain"
-	"github.com/caio-ireno/prodcts-api-go/internal/dto"
+	"github.com/caio-ireno/prodcts-api-go/internal/dto/input"
+	"github.com/caio-ireno/prodcts-api-go/internal/dto/output"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -24,7 +25,7 @@ func (c *ProductHandler) Create() http.HandlerFunc {
 
 		if token != "123456" {
 			code := http.StatusUnauthorized // 401
-			body := &dto.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -32,12 +33,12 @@ func (c *ProductHandler) Create() http.HandlerFunc {
 		}
 
 		// request
-		var reqBody dto.RequestBodyProduct // do tipo RequestBodyProduct
+		var reqBody input.RequestBodyProduct // do tipo RequestBodyProduct
 		err := json.NewDecoder(r.Body).Decode(&reqBody)
 
 		if err != nil {
 			code := http.StatusBadRequest
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Bad Request",
 				Data:    nil,
 				Error:   true,
@@ -54,7 +55,7 @@ func (c *ProductHandler) Create() http.HandlerFunc {
 		c.storage[pr.Id] = &pr
 
 		code := http.StatusCreated
-		body := &dto.ResponseBodyProduct{
+		body := &output.ResponseBodyProduct{
 			Message: "Product created",
 			Data: &domain.Product{
 				Id:       pr.Id,
@@ -81,7 +82,7 @@ func (c ProductHandler) GetAll() http.HandlerFunc {
 			products = append(products, product)
 		}
 
-		body := &dto.ResponseBodyProductAll{
+		body := &output.ResponseBodyProductAll{
 			Message: "Products Found",
 			Data:    products,
 			Error:   false,
@@ -106,7 +107,7 @@ func (c ProductHandler) GetById() http.HandlerFunc {
 
 		if !ok {
 			code := http.StatusNotFound
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Product not found",
 				Data:    nil,
 				Error:   true,
@@ -118,7 +119,7 @@ func (c ProductHandler) GetById() http.HandlerFunc {
 		}
 
 		code := http.StatusOK
-		body := &dto.ResponseBodyProduct{
+		body := &output.ResponseBodyProduct{
 			Message: "Product found",
 			Data: &domain.Product{
 				Name:     products.Name,
@@ -141,7 +142,7 @@ func (c *ProductHandler) UpdateProdcut() http.HandlerFunc {
 
 		if token != "123456" {
 			code := http.StatusUnauthorized // 401
-			body := &dto.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -152,7 +153,7 @@ func (c *ProductHandler) UpdateProdcut() http.HandlerFunc {
 
 		if err != nil {
 			code := http.StatusBadRequest
-			body := &dto.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -164,7 +165,7 @@ func (c *ProductHandler) UpdateProdcut() http.HandlerFunc {
 
 		if !ok {
 			code := http.StatusNotFound
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Product not found",
 				Data:    nil,
 				Error:   true,
@@ -175,13 +176,13 @@ func (c *ProductHandler) UpdateProdcut() http.HandlerFunc {
 		}
 
 		// Cria uma var do tipo UpdateBodyProduct
-		var reqBody dto.UpdateBodyProduct
+		var reqBody input.UpdateBodyProduct
 
 		err = json.NewDecoder(r.Body).Decode(&reqBody)
 
 		if err != nil {
 			code := http.StatusBadRequest
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Bad Request",
 				Data:    nil,
 				Error:   true,
@@ -198,7 +199,7 @@ func (c *ProductHandler) UpdateProdcut() http.HandlerFunc {
 		c.storage[productId] = &pr
 
 		code := http.StatusOK
-		body := &dto.ResponseBodyProduct{
+		body := &output.ResponseBodyProduct{
 			Message: "Product Update",
 			Data:    &pr,
 			Error:   false,
@@ -216,7 +217,7 @@ func (c *ProductHandler) DeleteProdcut() http.HandlerFunc {
 
 		if token != "123456" {
 			code := http.StatusUnauthorized // 401
-			body := &dto.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -227,7 +228,7 @@ func (c *ProductHandler) DeleteProdcut() http.HandlerFunc {
 
 		if err != nil {
 			code := http.StatusBadRequest
-			body := &dto.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -239,7 +240,7 @@ func (c *ProductHandler) DeleteProdcut() http.HandlerFunc {
 
 		if !ok {
 			code := http.StatusNotFound
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Product not found",
 				Data:    nil,
 				Error:   true,
@@ -252,7 +253,7 @@ func (c *ProductHandler) DeleteProdcut() http.HandlerFunc {
 		delete(c.storage, productId)
 
 		code := http.StatusOK
-		body := &dto.ResponseBodyProduct{
+		body := &output.ResponseBodyProduct{
 			Message: "Deleted Product ",
 			Data:    nil,
 			Error:   false,
@@ -270,7 +271,7 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 
 		if token != "123456" {
 			code := http.StatusUnauthorized // 401
-			body := &dto.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Unauthorized", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -281,7 +282,7 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 
 		if err != nil {
 			code := http.StatusBadRequest
-			body := &dto.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
+			body := &output.ResponseBodyProduct{Message: "Bad Request", Data: nil, Error: true}
 
 			w.WriteHeader(code)
 			json.NewEncoder(w).Encode(body)
@@ -293,7 +294,7 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 
 		if !ok {
 			code := http.StatusNotFound
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Product not found",
 				Data:    nil,
 				Error:   true,
@@ -304,8 +305,8 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 		}
 		/// ------ok -----
 
-		// Cria uma var do tipo UpdateBodyProduct
-		reqBody := dto.UpdateBodyProduct{
+		// Cria um reqBody preenchido com os dados atuais:
+		reqBody := input.UpdateBodyProduct{
 			Name:     product.Name,
 			Type:     product.Type,
 			Quantity: product.Quantity,
@@ -316,7 +317,7 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 
 		if err != nil {
 			code := http.StatusUnprocessableEntity
-			body := &dto.ResponseBodyProduct{
+			body := &output.ResponseBodyProduct{
 				Message: "Bad Request",
 				Data:    nil,
 				Error:   true,
@@ -335,7 +336,7 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 		c.storage[productId] = &pr
 
 		code := http.StatusOK
-		body := &dto.ResponseBodyProduct{
+		body := &output.ResponseBodyProduct{
 			Message: "Product Update",
 			Data:    &pr,
 			Error:   false,

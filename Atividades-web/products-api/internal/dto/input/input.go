@@ -1,4 +1,4 @@
-package dto
+package input
 
 import "github.com/caio-ireno/prodcts-api-go/internal/domain"
 
