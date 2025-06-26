@@ -404,3 +404,4 @@ func (c *ProductHandler) PatchProdcut() http.HandlerFunc {
 
 	}
 }
+

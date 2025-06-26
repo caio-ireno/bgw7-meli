@@ -68,8 +68,8 @@ func (r *repository) Update(product *domain.Product) error {
 	}
 
 	fmt.Println("rp:", attr)
-
 	fmt.Println("rp:", *product)
+
 	_, ok := r.storage[product.Id]
 
 	if !ok {
